@@ -8,8 +8,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("create-task-form");
   let divList = document.getElementById('list');
   const colors = ['red', 'yellow', 'green'];
+  
   let deleteButton;
-  let editButton;
+  
+  let editInput;
+  let editForm;
+  let index;
   let list;
   let todoListArray = [];
   // let todoListArray = {};
@@ -52,19 +56,29 @@ document.addEventListener("DOMContentLoaded", () => {
         todoListArray.splice(i, 1);
         toDoList.removeChild(list[i]);
       });
-      // remove from array
-    } 
-
-    for (let i=0; i < deleteButton.length; i++){
       editButton[i].addEventListener('click', () => {
         // create a form with an texfield input 
         // when this form is submitted, it should update the value of the list ...
+        index = i;
         createEditForm(list[i].innerText.slice(0,-5));
+        editForm.addEventListener('submit', editEntry, false);
       });
-      
     } 
     event.preventDefault();
   }
+
+
+  function editEntry(event) {
+    // update item in array at index 
+    todoListArray[index][0] = editInput.value;
+    // clear list or remove ul children 
+    toDoList.innerHTML = "";
+    displayList();
+    // remove submit form
+    divList.removeChild(editForm);
+    event.preventDefault();
+  }
+
 
   function displayList() {
     todoListArray.forEach(entry => {
@@ -109,17 +123,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function createEditForm(placeholder) {
     
-    let form = document.createElement('form');
-    let input = document.createElement('input');
+    editForm = document.createElement('form');
+    editInput = document.createElement('input');
     let submit = document.createElement('input');
 
-    input.type = "text";
-    input.placeholder = placeholder;
-    input.id = 'edit_field';
+    editInput.type = "text";
+    editInput.placeholder = placeholder;
+    editInput.setAttribute("id","editInput");
     submit.type = 'submit';
-    form.appendChild(input);
-    form.appendChild(submit);
-    divList.appendChild(form);
+    editForm.setAttribute("id","editForm");
+    editForm.appendChild(editInput);
+    editForm.appendChild(submit);
+    divList.appendChild(editForm);
   }
 });
 
